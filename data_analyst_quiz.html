@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Administration Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .quiz-container {
+            background-color: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 2.5rem;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .question-text {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 1.5rem;
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        @media (min-width: 640px) {
+            .options-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        .option-button {
+            background-color: #e2e8f0;
+            color: #2d3748;
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            border: 2px solid transparent;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            text-align: left;
+        }
+        .option-button:hover {
+            background-color: #cbd5e0;
+        }
+        .option-button.selected {
+            background-color: #4299e1;
+            color: #ffffff;
+            border-color: #2b6cb0;
+            box-shadow: 0 6px 12px rgba(66, 153, 225, 0.3);
+        }
+        .option-button.correct {
+            background-color: #48bb78;
+            color: #fff;
+            border-color: #38a169;
+        }
+        .option-button.wrong {
+            background-color: #f56565;
+            color: #fff;
+            border-color: #c53030;
+        }
+        .option-button:disabled {
+            cursor: not-allowed;
+        }
+        .action-button {
+            background-image: linear-gradient(to right, #4299e1, #63b3ed);
+            color: #ffffff;
+            padding: 1rem 2rem;
+            border-radius: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            border: none;
+            box-shadow: 0 8px 15px rgba(66, 153, 225, 0.4);
+        }
+        .action-button:hover:not(:disabled) {
+            background-image: linear-gradient(to right, #3182ce, #4299e1);
+            transform: translateY(-2px);
+        }
+        .action-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .score-display {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-top: 1rem;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="start-screen" class="quiz-container">
+        <h1 class="text-3xl font-bold text-gray-800 mb-4">Welcome to the data analyst Quiz!</h1>
+        <p class="text-lg text-gray-600 mb-6">Test your knowledge .</p>
+        <button id="start-quiz-btn" class="action-button">Start Quiz</button>
+    </div>
+
+    <div id="quiz-screen" class="quiz-container hidden">
+        <div class="question-text" id="question-text"></div>
+        <div class="options-grid" id="options-container"></div>
+        <button id="submit-answer-btn" class="action-button mt-4" disabled>Submit Answer</button>
+    </div>
+
+    <div id="result-screen" class="quiz-container hidden">
+        <h2 class="text-3xl font-bold text-gray-800 mb-4">Quiz Completed!</h2>
+        <p class="score-display mb-6">Your Score: <span id="final-score">0</span> out of <span id="total-questions">0</span></p>
+        <button id="restart-quiz-btn" class="action-button">Play Again</button>
+    </div>
+
+    <script>
+       const quizQuestions = [
+    {
+        question: "What is the primary role of a data analyst?",
+        options: [
+            "Develop mobile apps",
+            "Design marketing strategies",
+            "Extract insights from data",
+            "Manage network security"
+        ],
+        correctAnswer: 2
+    },
+    {
+        question: "Which of the following is NOT a data type in Excel?",
+        options: [
+            "Number",
+            "Date",
+            "Float",
+            "Text"
+        ],
+        correctAnswer: 2
+    },
+    {
+        question: "Which SQL command is used to retrieve data from a database?",
+        options: [
+            "SELECT",
+            "INSERT",
+            "DELETE",
+            "UPDATE"
+        ],
+        correctAnswer: 0
+    },
+    {
+        question: "What does CSV stand for?",
+        options: [
+            "Comma-Separated Values",
+            "Column Standard Values",
+            "Coded Spreadsheet Version",
+            "Computer Saved Variables"
+        ],
+        correctAnswer: 0
+    },
+    {
+        question: "Which Python library is commonly used for data analysis?",
+        options: [
+            "Django",
+            "NumPy",
+            "Flask",
+            "TensorFlow"
+        ],
+        correctAnswer: 1
+    },
+    {
+        question: "What type of chart is best for showing parts of a whole?",
+        options: [
+            "Pie chart",
+            "Line chart",
+            "Bar chart",
+            "Histogram"
+        ],
+        correctAnswer: 0
+    },
+    {
+        question: "Which function in Excel is used to calculate the average of values?",
+        options: [
+            "COUNT()",
+            "SUM()",
+            "MEAN()",
+            "AVERAGE()"
+        ],
+        correctAnswer: 3
+    },
+    {
+        question: "Which SQL clause is used to filter results?",
+        options: [
+            "ORDER BY",
+            "WHERE",
+            "JOIN",
+            "GROUP BY"
+        ],
+        correctAnswer: 1
+    },
+    {
+        question: "What does ETL stand for in data analysis?",
+        options: [
+            "Extract, Transform, Load",
+            "Evaluate, Test, Learn",
+            "Export, Transfer, Link",
+            "Examine, Type, Log"
+        ],
+        correctAnswer: 0
+    },
+    {
+        question: "Which of the following is used for data visualization in Python?",
+        options: [
+            "BeautifulSoup",
+            "Matplotlib",
+            "Scikit-learn",
+            "Pandas"
+        ],
+        correctAnswer: 1
+    }
+];
+
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let selectedAnswerIndex = null;
+
+        const startScreen = document.getElementById('start-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultScreen = document.getElementById('result-screen');
+
+        const startQuizBtn = document.getElementById('start-quiz-btn');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const submitAnswerBtn = document.getElementById('submit-answer-btn');
+
+        const finalScoreSpan = document.getElementById('final-score');
+        const totalQuestionsSpan = document.getElementById('total-questions');
+        const restartQuizBtn = document.getElementById('restart-quiz-btn');
+
+        function startQuiz() {
+            startScreen.classList.add('hidden');
+            resultScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            currentQuestionIndex = 0;
+            score = 0;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            selectedAnswerIndex = null;
+            submitAnswerBtn.disabled = true;
+            submitAnswerBtn.textContent = 'Submit Answer';
+            // Set the button's action to submit the answer for the new question
+            submitAnswerBtn.onclick = submitAnswer;
+
+            const currentQuestion = quizQuestions[currentQuestionIndex];
+            questionText.textContent = currentQuestion.question;
+            optionsContainer.innerHTML = '';
+
+            currentQuestion.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.classList.add('option-button');
+                button.dataset.index = index;
+                button.addEventListener('click', () => selectAnswer(index, button));
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function selectAnswer(index, clickedButton) {
+            const optionButtons = optionsContainer.querySelectorAll('.option-button');
+            optionButtons.forEach(btn => btn.classList.remove('selected'));
+            
+            clickedButton.classList.add('selected');
+            selectedAnswerIndex = index;
+            submitAnswerBtn.disabled = false;
+        }
+
+        function submitAnswer() {
+            const currentQuestion = quizQuestions[currentQuestionIndex];
+            const optionButtons = optionsContainer.querySelectorAll('.option-button');
+            
+            optionButtons.forEach(button => {
+                button.disabled = true;
+            });
+
+            if (selectedAnswerIndex === currentQuestion.correctAnswer) {
+                score++;
+                optionButtons[selectedAnswerIndex].classList.add('correct');
+            } else {
+                optionButtons[selectedAnswerIndex].classList.add('wrong');
+                optionButtons[currentQuestion.correctAnswer].classList.add('correct');
+            }
+
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizQuestions.length) {
+                submitAnswerBtn.textContent = 'Next Question';
+                // Change the button's action to load the next question
+                submitAnswerBtn.onclick = loadQuestion;
+            } else {
+                submitAnswerBtn.textContent = 'Show Results';
+                // Change the button's action to show the results
+                submitAnswerBtn.onclick = showResults;
+            }
+        }
+
+        function showResults() {
+            quizScreen.classList.add('hidden');
+            resultScreen.classList.remove('hidden');
+            finalScoreSpan.textContent = score;
+            totalQuestionsSpan.textContent = quizQuestions.length;
+        }
+
+        // Initial setup
+        startQuizBtn.addEventListener('click', startQuiz);
+        restartQuizBtn.addEventListener('click', startQuiz);
+
+    </script>
+</body>
+</html>
