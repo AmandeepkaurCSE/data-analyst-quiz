@@ -1,7 +1,7 @@
-#📋 How It Works
+**📋 How It Works**
 quizQuestions: Array of question objects (question, options, correctAnswer index).
 
-###Screens:###
+***Screens:***
 
 Start: displays heading and “Start Quiz” button.
 
