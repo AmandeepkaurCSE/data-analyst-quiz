@@ -9,7 +9,7 @@ Array of question objects:
 ### Screens
 1. **Start**: Displays heading and **Start Quiz** button.  
 2. **Quiz**: Shows current question and options. After selection, **Submit** becomes active.  
-3. **Result**: Reveals your final score and allows resetting the quiz.
+3. **Result**: Reveals your final score.
 
 ### Flow
 1. User clicks **“Start Quiz”** → moves to Quiz screen.  
