@@ -1,6 +1,6 @@
 ## 📋 How It Works
 
-### `quizQuestions`
+### `quiz Questions`
 Array of question objects:
 - `question`: The quiz question text.
 - `options`: Array of answer choices.
